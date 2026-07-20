@@ -1,0 +1,874 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>El Obrador — Carnicería Artesanal Gourmet</title>
+<meta name="description" content="Carnicería artesanal en línea. Cortes premium, packs de temporada, cadena de frío garantizada." />
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500&family=Work+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          burgundy: { DEFAULT: '#6B1420', dark: '#450B14', light: '#8A2233' },
+          charcoal: { DEFAULT: '#1A1512', soft: '#241E19' },
+          bone: { DEFAULT: '#F7F3EC', dim: '#EDE6D8' },
+          gold: { DEFAULT: '#C89B3C', dim: '#A87F2E' },
+          wood: '#D9C7A8'
+        },
+        fontFamily: {
+          display: ['Fraunces', 'serif'],
+          body: ['Work Sans', 'sans-serif'],
+          mono: ['JetBrains Mono', 'monospace']
+        }
+      }
+    }
+  }
+</script>
+
+<style>
+  html { scroll-behavior: smooth; }
+  body { font-family: 'Work Sans', sans-serif; background: #F7F3EC; color: #1A1512; }
+  .font-display { font-family: 'Fraunces', serif; }
+  .font-mono { font-family: 'JetBrains Mono', monospace; }
+
+  /* Signature: butcher's dashed cut-line divider, like a diagram cutting guide */
+  .cut-line {
+    position: relative;
+    height: 1px;
+    background-image: repeating-linear-gradient(to right, #C89B3C 0, #C89B3C 8px, transparent 8px, transparent 16px);
+  }
+  .cut-line::before, .cut-line::after {
+    content: '✂';
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 14px;
+    color: #C89B3C;
+    background: #F7F3EC;
+    padding: 0 8px;
+  }
+  .cut-line::before { left: 0; }
+  .cut-line::after { right: 0; }
+  .cut-line-dark::before, .cut-line-dark::after { background: #1A1512; }
+
+  /* Signature: circular quality-seal stamp */
+  .seal {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 84px; height: 84px; border-radius: 9999px;
+    border: 2px dashed #C89B3C; color: #C89B3C;
+    font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 1px;
+    text-align: center; line-height: 1.3; transform: rotate(-8deg);
+  }
+
+  .price-tag { font-family: 'JetBrains Mono', monospace; }
+
+  /* Marquee for top bar */
+  .marquee-track {
+    display: flex;
+    width: max-content;
+    animation: marquee 22s linear infinite;
+  }
+  @keyframes marquee {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+
+  /* Hover lift */
+  .lift { transition: transform .25s ease, box-shadow .25s ease; }
+  .lift:hover { transform: translateY(-4px); box-shadow: 0 20px 40px -12px rgba(26,21,18,0.25); }
+
+  /* Fade in on scroll */
+  .reveal { opacity: 0; transform: translateY(24px); transition: opacity .7s ease, transform .7s ease; }
+  .reveal.in { opacity: 1; transform: translateY(0); }
+
+  ::-webkit-scrollbar { width: 10px; }
+  ::-webkit-scrollbar-track { background: #F7F3EC; }
+  ::-webkit-scrollbar-thumb { background: #6B1420; border-radius: 10px; }
+
+  input:focus, select:focus, button:focus-visible, a:focus-visible {
+    outline: 2px solid #C89B3C; outline-offset: 2px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .marquee-track { animation: none; }
+    .reveal { transition: none; opacity: 1; transform: none; }
+  }
+</style>
+</head>
+<body class="antialiased">
+
+<!-- ============ 1. TOP BAR ============ -->
+<div class="bg-charcoal text-bone text-xs md:text-sm overflow-hidden">
+  <div class="marquee-track py-2 whitespace-nowrap">
+    <div class="flex items-center gap-10 px-5">
+      <span>🚚&nbsp; Envío gratis en pedidos +50€</span>
+      <span class="text-gold">•</span>
+      <span>❄️&nbsp; Garantía de cadena de frío 24h</span>
+      <span class="text-gold">•</span>
+      <span>🎁&nbsp; Código <strong class="text-gold">OBRADOR10</strong> — 10% dto. en tu primer pedido</span>
+      <span class="text-gold">•</span>
+    </div>
+    <div class="flex items-center gap-10 px-5" aria-hidden="true">
+      <span>🚚&nbsp; Envío gratis en pedidos +50€</span>
+      <span class="text-gold">•</span>
+      <span>❄️&nbsp; Garantía de cadena de frío 24h</span>
+      <span class="text-gold">•</span>
+      <span>🎁&nbsp; Código <strong class="text-gold">OBRADOR10</strong> — 10% dto. en tu primer pedido</span>
+      <span class="text-gold">•</span>
+    </div>
+  </div>
+</div>
+
+<!-- ============ 2. HEADER / NAVBAR ============ -->
+<header class="sticky top-0 z-50 bg-bone/95 backdrop-blur border-b border-charcoal/10">
+  <div class="max-w-7xl mx-auto px-5 md:px-8">
+    <div class="flex items-center justify-between h-20 gap-4">
+
+      <!-- Logo -->
+      <a href="#" class="flex items-center gap-2 shrink-0">
+        <span class="text-2xl">🔪</span>
+        <span class="font-display text-xl md:text-2xl font-semibold tracking-tight text-burgundy">El Obrador</span>
+      </a>
+
+      <!-- Nav desktop -->
+      <nav class="hidden lg:flex items-center gap-8 font-body text-sm font-medium" aria-label="Navegación principal">
+        <div class="relative group">
+          <button class="flex items-center gap-1 hover:text-burgundy transition-colors">
+            Cortes
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+          <div class="absolute left-0 top-full mt-2 w-52 bg-white border border-charcoal/10 rounded-lg shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all py-2">
+            <a href="#catalogo" class="block px-4 py-2 text-sm hover:bg-bone-dim hover:text-burgundy">Vacuno</a>
+            <a href="#catalogo" class="block px-4 py-2 text-sm hover:bg-bone-dim hover:text-burgundy">Cerdo</a>
+            <a href="#catalogo" class="block px-4 py-2 text-sm hover:bg-bone-dim hover:text-burgundy">Aves de corral</a>
+            <a href="#catalogo" class="block px-4 py-2 text-sm hover:bg-bone-dim hover:text-burgundy">Embutidos</a>
+          </div>
+        </div>
+        <a href="#lotes" class="hover:text-burgundy transition-colors">Lotes</a>
+        <a href="#historia" class="hover:text-burgundy transition-colors">Nuestra Historia</a>
+        <a href="#resenas" class="hover:text-burgundy transition-colors">Reseñas</a>
+        <a href="#lotes" class="inline-flex items-center gap-1.5 bg-gold text-charcoal font-semibold px-4 py-2 rounded-full hover:bg-gold-dim transition-colors">
+          📦 Packs y Lotes
+        </a>
+      </nav>
+
+      <!-- Right icons -->
+      <div class="flex items-center gap-3 md:gap-4">
+        <button aria-label="Buscar" class="hidden sm:flex p-2 hover:text-burgundy transition-colors" onclick="toggleSearch()">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        </button>
+        <button aria-label="Mi cuenta" class="hidden sm:flex p-2 hover:text-burgundy transition-colors">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        </button>
+        <button aria-label="Carrito" class="relative p-2 hover:text-burgundy transition-colors" onclick="toggleCart()">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/></svg>
+          <span id="cart-count" class="absolute -top-1 -right-1 bg-burgundy text-bone text-[10px] font-bold w-5 h-5 flex items-center justify-center rounded-full">0</span>
+        </button>
+        <button aria-label="Abrir menú" class="lg:hidden p-2" onclick="toggleMobileMenu()">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Search bar (toggle) -->
+    <div id="search-bar" class="hidden pb-4">
+      <input type="text" placeholder="Buscar cortes, packs, embutidos..." class="w-full border border-charcoal/20 rounded-full px-5 py-2.5 text-sm focus:border-burgundy" />
+    </div>
+  </div>
+
+  <!-- Mobile menu -->
+  <div id="mobile-menu" class="hidden lg:hidden border-t border-charcoal/10 bg-bone px-5 py-4 space-y-3 font-medium text-sm">
+    <a href="#catalogo" class="block py-1.5">Cortes</a>
+    <a href="#lotes" class="block py-1.5">Lotes</a>
+    <a href="#historia" class="block py-1.5">Nuestra Historia</a>
+    <a href="#resenas" class="block py-1.5">Reseñas</a>
+    <a href="#lotes" class="inline-block bg-gold text-charcoal font-semibold px-4 py-2 rounded-full">📦 Packs y Lotes</a>
+  </div>
+</header>
+
+<!-- ============ CART DRAWER ============ -->
+<div id="cart-overlay" class="hidden fixed inset-0 bg-charcoal/60 z-[60]" onclick="toggleCart()"></div>
+<aside id="cart-drawer" class="hidden fixed top-0 right-0 h-full w-full sm:w-96 bg-bone z-[70] shadow-2xl flex flex-col">
+  <div class="flex items-center justify-between p-5 border-b border-charcoal/10">
+    <h2 class="font-display text-xl font-semibold">Tu carrito</h2>
+    <button onclick="toggleCart()" aria-label="Cerrar carrito" class="p-1">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+  <div id="cart-items" class="flex-1 overflow-y-auto p-5 space-y-4 text-sm text-charcoal/70">
+    <p>Tu carrito está vacío. Añade algún corte o lote para empezar.</p>
+  </div>
+  <div class="p-5 border-t border-charcoal/10">
+    <div class="flex justify-between font-mono font-semibold mb-4">
+      <span>Total</span>
+      <span id="cart-total">0,00 €</span>
+    </div>
+    <button class="w-full bg-burgundy text-bone font-semibold py-3 rounded-full hover:bg-burgundy-dark transition-colors">Finalizar Pedido</button>
+  </div>
+</aside>
+
+<!-- ============ 3. HERO ============ -->
+<section class="relative min-h-[92vh] flex items-center overflow-hidden">
+  <div class="absolute inset-0">
+    <img src="https://images.unsplash.com/photo-1607623814075-e51df1bdc82f?q=80&w=1920&auto=format&fit=crop"
+         alt="Corte de carne premium madurado sobre tabla oscura"
+         class="w-full h-full object-cover"
+         onerror="this.style.display='none'; this.parentElement.classList.add('bg-gradient-to-br','from-charcoal','to-burgundy-dark')" />
+    <div class="absolute inset-0 bg-gradient-to-r from-charcoal/90 via-charcoal/60 to-charcoal/20"></div>
+  </div>
+
+  <div class="relative max-w-7xl mx-auto px-5 md:px-8 w-full py-24">
+    <div class="max-w-xl reveal">
+      <span class="inline-flex items-center gap-2 text-gold font-mono text-xs tracking-widest uppercase mb-6">
+        <span class="w-8 h-px bg-gold"></span> Obrador artesanal desde 1978
+      </span>
+      <h1 class="font-display text-5xl md:text-6xl lg:text-7xl font-semibold text-bone leading-[0.98] mb-6">
+        La carne, cortada como se debe.
+      </h1>
+      <p class="text-bone/80 text-lg md:text-xl leading-relaxed mb-9 max-w-md">
+        Cortes de ganadería local, madurados y preparados a mano por nuestro maestro carnicero. Directo del obrador a tu mesa, con frío garantizado.
+      </p>
+      <div class="flex flex-wrap gap-4">
+        <a href="#lotes" class="inline-flex items-center gap-2 bg-burgundy hover:bg-burgundy-dark text-bone font-semibold px-8 py-4 rounded-full transition-colors">
+          Ver Lotes y Ofertas
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </a>
+        <a href="#catalogo" class="inline-flex items-center gap-2 border border-bone/40 text-bone font-semibold px-8 py-4 rounded-full hover:bg-bone/10 transition-colors">
+          Explorar Cortes
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 4. BARRA DE GARANTÍAS ============ -->
+<section class="bg-charcoal text-bone">
+  <div class="max-w-7xl mx-auto px-5 md:px-8 py-12 grid grid-cols-2 md:grid-cols-4 gap-8">
+    <div class="flex flex-col items-center text-center gap-3 reveal">
+      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#C89B3C" stroke-width="1.8"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/><circle cx="12" cy="12" r="4"/></svg>
+      <p class="font-display font-semibold text-sm">Cadena de frío 2–8°C</p>
+      <p class="text-xs text-bone/60">Trazabilidad garantizada de principio a fin</p>
+    </div>
+    <div class="flex flex-col items-center text-center gap-3 reveal">
+      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#C89B3C" stroke-width="1.8"><path d="M6 9l6-6 6 6M6 9v10a1 1 0 001 1h10a1 1 0 001-1V9"/></svg>
+      <p class="font-display font-semibold text-sm">Corte Personalizado</p>
+      <p class="text-xs text-bone/60">Fino, medio, grueso o para empanar</p>
+    </div>
+    <div class="flex flex-col items-center text-center gap-3 reveal">
+      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#C89B3C" stroke-width="1.8"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a4 4 0 018 0v2"/></svg>
+      <p class="font-display font-semibold text-sm">Envasado al Vacío</p>
+      <p class="text-xs text-bone/60">Frescura sellada hasta que lo abres</p>
+    </div>
+    <div class="flex flex-col items-center text-center gap-3 reveal">
+      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#C89B3C" stroke-width="1.8"><polygon points="12 2 15 9 22 9 16.5 13.5 18.5 21 12 16.8 5.5 21 7.5 13.5 2 9 9 9"/></svg>
+      <p class="font-display font-semibold text-sm">4.9 / 5 en Reseñas</p>
+      <p class="text-xs text-bone/60">+2.400 valoraciones verificadas</p>
+    </div>
+  </div>
+</section>
+
+<div class="cut-line max-w-7xl mx-auto"></div>
+
+<!-- ============ 5. FILTRO RÁPIDO POR OCASIÓN ============ -->
+<section class="max-w-7xl mx-auto px-5 md:px-8 py-20">
+  <div class="mb-10 reveal">
+    <span class="font-mono text-xs tracking-widest text-gold-dim uppercase">¿Qué vas a cocinar?</span>
+    <h2 class="font-display text-3xl md:text-4xl font-semibold mt-2">Elige tu ocasión</h2>
+  </div>
+  <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+    <button onclick="filterOccasion('plancha')" class="occasion-card group relative rounded-2xl overflow-hidden aspect-[4/5] reveal">
+      <img src="https://images.unsplash.com/photo-1432139555190-58524dae6a55?q=80&w=800&auto=format&fit=crop" alt="Cortes para la plancha" class="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" onerror="this.remove()" />
+      <div class="absolute inset-0 bg-gradient-to-t from-charcoal/85 via-charcoal/10 to-transparent"></div>
+      <span class="absolute bottom-4 left-4 text-bone font-display font-semibold text-lg">Para la Plancha</span>
+    </button>
+    <button onclick="filterOccasion('barbacoa')" class="occasion-card group relative rounded-2xl overflow-hidden aspect-[4/5] reveal">
+      <img src="https://images.unsplash.com/photo-1594041680534-e8c8cdebd659?q=80&w=800&auto=format&fit=crop" alt="Cortes para barbacoa" class="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" onerror="this.remove()" />
+      <div class="absolute inset-0 bg-gradient-to-t from-charcoal/85 via-charcoal/10 to-transparent"></div>
+      <span class="absolute bottom-4 left-4 text-bone font-display font-semibold text-lg">Barbacoa</span>
+    </button>
+    <button onclick="filterOccasion('guisos')" class="occasion-card group relative rounded-2xl overflow-hidden aspect-[4/5] reveal">
+      <img src="https://images.unsplash.com/photo-1600891964092-4316c288032e?q=80&w=800&auto=format&fit=crop" alt="Cortes para guisos" class="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" onerror="this.remove()" />
+      <div class="absolute inset-0 bg-gradient-to-t from-charcoal/85 via-charcoal/10 to-transparent"></div>
+      <span class="absolute bottom-4 left-4 text-bone font-display font-semibold text-lg">Guisos</span>
+    </button>
+    <button onclick="filterOccasion('lotes')" class="occasion-card group relative rounded-2xl overflow-hidden aspect-[4/5] reveal">
+      <img src="https://images.unsplash.com/photo-1529692236671-f1f6cf9683ba?q=80&w=800&auto=format&fit=crop" alt="Lotes semanales" class="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" onerror="this.remove()" />
+      <div class="absolute inset-0 bg-gradient-to-t from-charcoal/85 via-charcoal/10 to-transparent"></div>
+      <span class="absolute bottom-4 left-4 text-bone font-display font-semibold text-lg">Lotes Semanales</span>
+    </button>
+  </div>
+</section>
+
+<!-- ============ 6. LOTES ESTRELLA (AOV) ============ -->
+<section id="lotes" class="bg-charcoal-soft py-20">
+  <div class="max-w-7xl mx-auto px-5 md:px-8">
+    <div class="flex items-end justify-between mb-10 reveal">
+      <div>
+        <span class="font-mono text-xs tracking-widest text-gold uppercase">Más valor, un solo pedido</span>
+        <h2 class="font-display text-3xl md:text-4xl font-semibold text-bone mt-2">Lotes Estrella</h2>
+      </div>
+      <span class="seal hidden md:inline-flex shrink-0">CALIDAD<br/>GARANTIZADA</span>
+    </div>
+
+    <div class="grid md:grid-cols-3 gap-6">
+
+      <div class="lift reveal bg-bone rounded-2xl overflow-hidden flex flex-col">
+        <div class="relative h-52">
+          <img src="https://images.unsplash.com/photo-1544025162-d76694265947?q=80&w=800&auto=format&fit=crop" alt="Lote Parrillada Familiar" class="w-full h-full object-cover" onerror="this.remove()" />
+          <span class="absolute top-3 left-3 bg-burgundy text-bone text-xs font-bold px-3 py-1 rounded-full">−20%</span>
+        </div>
+        <div class="p-6 flex flex-col flex-1">
+          <h3 class="font-display text-xl font-semibold mb-2">Lote Parrillada Familiar</h3>
+          <ul class="text-sm text-charcoal/70 space-y-1 mb-4 flex-1">
+            <li>• 500g Entrecot madurado</li>
+            <li>• 400g Chuletas de cerdo</li>
+            <li>• 300g Chorizo criollo</li>
+            <li>• Sal en escamas de regalo</li>
+          </ul>
+          <div class="flex items-center gap-2 mb-4">
+            <span class="price-tag text-charcoal/40 line-through text-sm">42,00 €</span>
+            <span class="price-tag text-burgundy text-2xl font-semibold">33,60 €</span>
+          </div>
+          <button onclick="addToCart('Lote Parrillada Familiar', 33.60)" class="w-full bg-charcoal text-bone font-semibold py-3 rounded-full hover:bg-burgundy transition-colors">Añadir al Carrito</button>
+        </div>
+      </div>
+
+      <div class="lift reveal bg-bone rounded-2xl overflow-hidden flex flex-col md:scale-105 ring-2 ring-gold">
+        <div class="relative h-52">
+          <img src="https://images.unsplash.com/photo-1558030006-450675393462?q=80&w=800&auto=format&fit=crop" alt="Lote Gourmet Premium" class="w-full h-full object-cover" onerror="this.remove()" />
+          <span class="absolute top-3 left-3 bg-gold text-charcoal text-xs font-bold px-3 py-1 rounded-full">MÁS VENDIDO</span>
+        </div>
+        <div class="p-6 flex flex-col flex-1">
+          <h3 class="font-display text-xl font-semibold mb-2">Lote Gourmet Premium</h3>
+          <ul class="text-sm text-charcoal/70 space-y-1 mb-4 flex-1">
+            <li>• 400g Solomillo de ternera</li>
+            <li>• 300g Picaña madurada 21 días</li>
+            <li>• 250g Jamón ibérico loncheado</li>
+            <li>• Guía de maridaje incluida</li>
+          </ul>
+          <div class="flex items-center gap-2 mb-4">
+            <span class="price-tag text-charcoal/40 line-through text-sm">68,00 €</span>
+            <span class="price-tag text-burgundy text-2xl font-semibold">54,90 €</span>
+          </div>
+          <button onclick="addToCart('Lote Gourmet Premium', 54.90)" class="w-full bg-burgundy text-bone font-semibold py-3 rounded-full hover:bg-burgundy-dark transition-colors">Añadir al Carrito</button>
+        </div>
+      </div>
+
+      <div class="lift reveal bg-bone rounded-2xl overflow-hidden flex flex-col">
+        <div class="relative h-52">
+          <img src="https://images.unsplash.com/photo-1607116667981-ee4b532eab89?q=80&w=800&auto=format&fit=crop" alt="Lote Semanal Cocina Fácil" class="w-full h-full object-cover" onerror="this.remove()" />
+          <span class="absolute top-3 left-3 bg-burgundy text-bone text-xs font-bold px-3 py-1 rounded-full">−15%</span>
+        </div>
+        <div class="p-6 flex flex-col flex-1">
+          <h3 class="font-display text-xl font-semibold mb-2">Lote Semanal Cocina Fácil</h3>
+          <ul class="text-sm text-charcoal/70 space-y-1 mb-4 flex-1">
+            <li>• 600g Pechuga de pollo fileteada</li>
+            <li>• 500g Carne picada mixta</li>
+            <li>• 400g Filetes de cerdo empanar</li>
+            <li>• Recetario semanal PDF</li>
+          </ul>
+          <div class="flex items-center gap-2 mb-4">
+            <span class="price-tag text-charcoal/40 line-through text-sm">29,00 €</span>
+            <span class="price-tag text-burgundy text-2xl font-semibold">24,65 €</span>
+          </div>
+          <button onclick="addToCart('Lote Semanal Cocina Fácil', 24.65)" class="w-full bg-charcoal text-bone font-semibold py-3 rounded-full hover:bg-burgundy transition-colors">Añadir al Carrito</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ============ 7. CATÁLOGO CON SELECTOR INTERACTIVO ============ -->
+<section id="catalogo" class="max-w-7xl mx-auto px-5 md:px-8 py-20">
+  <div class="mb-10 reveal">
+    <span class="font-mono text-xs tracking-widest text-gold-dim uppercase">Cortes al detalle</span>
+    <h2 class="font-display text-3xl md:text-4xl font-semibold mt-2">Nuestro Catálogo</h2>
+  </div>
+
+  <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+
+    <div class="reveal bg-white rounded-2xl border border-charcoal/10 overflow-hidden">
+      <img src="https://images.unsplash.com/photo-1607623814075-e51df1bdc82f?q=80&w=700&auto=format&fit=crop" alt="Entrecot de ternera" class="w-full h-48 object-cover" onerror="this.remove()" />
+      <div class="p-5">
+        <h3 class="font-display font-semibold text-lg mb-1">Entrecot de Ternera</h3>
+        <p class="text-xs text-charcoal/60 mb-4">Madurado 21 días · Ganadería local</p>
+        <div class="grid grid-cols-2 gap-3 mb-4">
+          <div>
+            <label class="text-[11px] font-mono uppercase text-charcoal/50 block mb-1">Peso</label>
+            <select class="product-weight w-full border border-charcoal/20 rounded-lg px-2 py-1.5 text-sm">
+              <option value="500">500 g</option>
+              <option value="1000">1 kg</option>
+            </select>
+          </div>
+          <div>
+            <label class="text-[11px] font-mono uppercase text-charcoal/50 block mb-1">Corte</label>
+            <select class="product-cut w-full border border-charcoal/20 rounded-lg px-2 py-1.5 text-sm">
+              <option>Fino</option>
+              <option>Medio</option>
+              <option>Grueso</option>
+            </select>
+          </div>
+        </div>
+        <div class="flex items-center justify-between">
+          <span class="price-tag text-burgundy font-semibold text-lg">18,50 €/kg</span>
+          <button onclick="addToCartFromCard(this, 'Entrecot de Ternera', 18.50)" class="bg-charcoal text-bone text-sm font-semibold px-4 py-2 rounded-full hover:bg-burgundy transition-colors">Añadir</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="reveal bg-white rounded-2xl border border-charcoal/10 overflow-hidden">
+      <img src="https://images.unsplash.com/photo-1558030006-450675393462?q=80&w=700&auto=format&fit=crop" alt="Solomillo de cerdo ibérico" class="w-full h-48 object-cover" onerror="this.remove()" />
+      <div class="p-5">
+        <h3 class="font-display font-semibold text-lg mb-1">Solomillo de Cerdo Ibérico</h3>
+        <p class="text-xs text-charcoal/60 mb-4">Cerdo ibérico de bellota</p>
+        <div class="grid grid-cols-2 gap-3 mb-4">
+          <div>
+            <label class="text-[11px] font-mono uppercase text-charcoal/50 block mb-1">Peso</label>
+            <select class="product-weight w-full border border-charcoal/20 rounded-lg px-2 py-1.5 text-sm">
+              <option value="500">500 g</option>
+              <option value="1000">1 kg</option>
+            </select>
+          </div>
+          <div>
+            <label class="text-[11px] font-mono uppercase text-charcoal/50 block mb-1">Corte</label>
+            <select class="product-cut w-full border border-charcoal/20 rounded-lg px-2 py-1.5 text-sm">
+              <option>Entero</option>
+              <option>Medallones</option>
+              <option>Para empanar</option>
+            </select>
+          </div>
+        </div>
+        <div class="flex items-center justify-between">
+          <span class="price-tag text-burgundy font-semibold text-lg">15,90 €/kg</span>
+          <button onclick="addToCartFromCard(this, 'Solomillo de Cerdo Ibérico', 15.90)" class="bg-charcoal text-bone text-sm font-semibold px-4 py-2 rounded-full hover:bg-burgundy transition-colors">Añadir</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="reveal bg-white rounded-2xl border border-charcoal/10 overflow-hidden">
+      <img src="https://images.unsplash.com/photo-1518492104633-130d0cc84637?q=80&w=700&auto=format&fit=crop" alt="Pechuga de pollo de corral" class="w-full h-48 object-cover" onerror="this.remove()" />
+      <div class="p-5">
+        <h3 class="font-display font-semibold text-lg mb-1">Pechuga de Pollo de Corral</h3>
+        <p class="text-xs text-charcoal/60 mb-4">Alimentación 100% natural</p>
+        <div class="grid grid-cols-2 gap-3 mb-4">
+          <div>
+            <label class="text-[11px] font-mono uppercase text-charcoal/50 block mb-1">Peso</label>
+            <select class="product-weight w-full border border-charcoal/20 rounded-lg px-2 py-1.5 text-sm">
+              <option value="500">500 g</option>
+              <option value="1000">1 kg</option>
+            </select>
+          </div>
+          <div>
+            <label class="text-[11px] font-mono uppercase text-charcoal/50 block mb-1">Corte</label>
+            <select class="product-cut w-full border border-charcoal/20 rounded-lg px-2 py-1.5 text-sm">
+              <option>Fileteada</option>
+              <option>Entera</option>
+              <option>Para empanar</option>
+            </select>
+          </div>
+        </div>
+        <div class="flex items-center justify-between">
+          <span class="price-tag text-burgundy font-semibold text-lg">8,90 €/kg</span>
+          <button onclick="addToCartFromCard(this, 'Pechuga de Pollo de Corral', 8.90)" class="bg-charcoal text-bone text-sm font-semibold px-4 py-2 rounded-full hover:bg-burgundy transition-colors">Añadir</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="reveal bg-white rounded-2xl border border-charcoal/10 overflow-hidden">
+      <img src="https://images.unsplash.com/photo-1529692236671-f1f6cf9683ba?q=80&w=700&auto=format&fit=crop" alt="Vacío premium" class="w-full h-48 object-cover" onerror="this.remove()" />
+      <div class="p-5">
+        <h3 class="font-display font-semibold text-lg mb-1">Vacío Premium</h3>
+        <p class="text-xs text-charcoal/60 mb-4">Madurado 21 días · Ideal parrilla</p>
+        <div class="grid grid-cols-2 gap-3 mb-4">
+          <div>
+            <label class="text-[11px] font-mono uppercase text-charcoal/50 block mb-1">Peso</label>
+            <select class="product-weight w-full border border-charcoal/20 rounded-lg px-2 py-1.5 text-sm">
+              <option value="500">500 g</option>
+              <option value="1000">1 kg</option>
+            </select>
+          </div>
+          <div>
+            <label class="text-[11px] font-mono uppercase text-charcoal/50 block mb-1">Corte</label>
+            <select class="product-cut w-full border border-charcoal/20 rounded-lg px-2 py-1.5 text-sm">
+              <option>Medio</option>
+              <option>Grueso</option>
+            </select>
+          </div>
+        </div>
+        <div class="flex items-center justify-between">
+          <span class="price-tag text-burgundy font-semibold text-lg">18,75 €/kg</span>
+          <button onclick="addToCartFromCard(this, 'Vacío Premium', 18.75)" class="bg-charcoal text-bone text-sm font-semibold px-4 py-2 rounded-full hover:bg-burgundy transition-colors">Añadir</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="reveal bg-white rounded-2xl border border-charcoal/10 overflow-hidden">
+      <img src="https://images.unsplash.com/photo-1621996346565-e3dbc646d9a9?q=80&w=700&auto=format&fit=crop" alt="Chorizo criollo artesanal" class="w-full h-48 object-cover" onerror="this.remove()" />
+      <div class="p-5">
+        <h3 class="font-display font-semibold text-lg mb-1">Chorizo Criollo Artesanal</h3>
+        <p class="text-xs text-charcoal/60 mb-4">Receta tradicional de la casa</p>
+        <div class="grid grid-cols-2 gap-3 mb-4">
+          <div>
+            <label class="text-[11px] font-mono uppercase text-charcoal/50 block mb-1">Peso</label>
+            <select class="product-weight w-full border border-charcoal/20 rounded-lg px-2 py-1.5 text-sm">
+              <option value="500">500 g</option>
+              <option value="1000">1 kg</option>
+            </select>
+          </div>
+          <div>
+            <label class="text-[11px] font-mono uppercase text-charcoal/50 block mb-1">Corte</label>
+            <select class="product-cut w-full border border-charcoal/20 rounded-lg px-2 py-1.5 text-sm">
+              <option>Entero</option>
+              <option>En rodajas</option>
+            </select>
+          </div>
+        </div>
+        <div class="flex items-center justify-between">
+          <span class="price-tag text-burgundy font-semibold text-lg">11,20 €/kg</span>
+          <button onclick="addToCartFromCard(this, 'Chorizo Criollo Artesanal', 11.20)" class="bg-charcoal text-bone text-sm font-semibold px-4 py-2 rounded-full hover:bg-burgundy transition-colors">Añadir</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="reveal bg-white rounded-2xl border border-charcoal/10 overflow-hidden">
+      <img src="https://images.unsplash.com/photo-1600891964092-4316c288032e?q=80&w=700&auto=format&fit=crop" alt="Costillar de cerdo BBQ" class="w-full h-48 object-cover" onerror="this.remove()" />
+      <div class="p-5">
+        <h3 class="font-display font-semibold text-lg mb-1">Costillar de Cerdo BBQ</h3>
+        <p class="text-xs text-charcoal/60 mb-4">Marinado casero incluido</p>
+        <div class="grid grid-cols-2 gap-3 mb-4">
+          <div>
+            <label class="text-[11px] font-mono uppercase text-charcoal/50 block mb-1">Peso</label>
+            <select class="product-weight w-full border border-charcoal/20 rounded-lg px-2 py-1.5 text-sm">
+              <option value="1000">1 kg</option>
+              <option value="1500">1,5 kg</option>
+            </select>
+          </div>
+          <div>
+            <label class="text-[11px] font-mono uppercase text-charcoal/50 block mb-1">Corte</label>
+            <select class="product-cut w-full border border-charcoal/20 rounded-lg px-2 py-1.5 text-sm">
+              <option>Entero</option>
+              <option>Troceado</option>
+            </select>
+          </div>
+        </div>
+        <div class="flex items-center justify-between">
+          <span class="price-tag text-burgundy font-semibold text-lg">13,40 €/kg</span>
+          <button onclick="addToCartFromCard(this, 'Costillar de Cerdo BBQ', 13.40)" class="bg-charcoal text-bone text-sm font-semibold px-4 py-2 rounded-full hover:bg-burgundy transition-colors">Añadir</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<div class="cut-line cut-line-dark max-w-7xl mx-auto"></div>
+
+<!-- ============ 8. DEL OBRADOR A TU CASA ============ -->
+<section class="max-w-7xl mx-auto px-5 md:px-8 py-20">
+  <div class="mb-14 text-center reveal">
+    <span class="font-mono text-xs tracking-widest text-gold-dim uppercase">Nuestro proceso</span>
+    <h2 class="font-display text-3xl md:text-4xl font-semibold mt-2">Del Obrador a tu Casa</h2>
+  </div>
+  <div class="grid md:grid-cols-3 gap-10">
+    <div class="text-center reveal">
+      <div class="w-20 h-20 mx-auto mb-5 rounded-full bg-burgundy/10 flex items-center justify-center">
+        <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#6B1420" stroke-width="1.8"><path d="M14.5 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V7.5L14.5 2z"/><path d="M14 2v6h6M9 15l2 2 4-4"/></svg>
+      </div>
+      <h3 class="font-display font-semibold text-xl mb-2">1. Corte a mano</h3>
+      <p class="text-sm text-charcoal/65 max-w-xs mx-auto">Nuestro maestro carnicero selecciona y corta cada pieza según el pedido, sin prisas ni máquinas.</p>
+    </div>
+    <div class="text-center reveal">
+      <div class="w-20 h-20 mx-auto mb-5 rounded-full bg-burgundy/10 flex items-center justify-center">
+        <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#6B1420" stroke-width="1.8"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a4 4 0 018 0v2"/></svg>
+      </div>
+      <h3 class="font-display font-semibold text-xl mb-2">2. Envasado al vacío</h3>
+      <p class="text-sm text-charcoal/65 max-w-xs mx-auto">Sellamos cada corte al vacío para preservar frescura, sabor y jugosidad hasta que lo abras.</p>
+    </div>
+    <div class="text-center reveal">
+      <div class="w-20 h-20 mx-auto mb-5 rounded-full bg-burgundy/10 flex items-center justify-center">
+        <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#6B1420" stroke-width="1.8"><rect x="1" y="6" width="15" height="12" rx="2"/><path d="M16 10h3l3 3v3h-6z"/><circle cx="6" cy="20" r="1.5"/><circle cx="18" cy="20" r="1.5"/></svg>
+      </div>
+      <h3 class="font-display font-semibold text-xl mb-2">3. Transporte refrigerado</h3>
+      <p class="text-sm text-charcoal/65 max-w-xs mx-auto">Enviamos en furgones con control de temperatura, manteniendo entre 2–8°C hasta tu puerta.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 9. PRUEBA SOCIAL ============ -->
+<section id="resenas" class="bg-bone-dim py-20">
+  <div class="max-w-7xl mx-auto px-5 md:px-8">
+    <div class="flex flex-col md:flex-row md:items-end md:justify-between mb-10 gap-4 reveal">
+      <div>
+        <span class="font-mono text-xs tracking-widest text-gold-dim uppercase">Lo que dicen de nosotros</span>
+        <h2 class="font-display text-3xl md:text-4xl font-semibold mt-2">Reseñas de Clientes</h2>
+      </div>
+      <div class="flex items-center gap-3">
+        <div class="flex text-gold text-xl">★★★★★</div>
+        <span class="font-mono font-semibold">4.9/5</span>
+        <span class="text-sm text-charcoal/50">· 2.437 reseñas</span>
+      </div>
+    </div>
+
+    <div class="relative reveal">
+      <div id="testimonial-track" class="flex gap-6 overflow-x-auto scroll-smooth snap-x snap-mandatory pb-4" style="scrollbar-width:none;">
+
+        <div class="snap-start shrink-0 w-full sm:w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)] bg-white rounded-2xl p-6 border border-charcoal/10">
+          <div class="text-gold mb-3">★★★★★</div>
+          <p class="text-sm text-charcoal/75 mb-4">"El vacío estaba en su punto exacto de maduración. Hice una parrillada para diez personas y no sobró nada."</p>
+          <p class="font-semibold text-sm">Marta G.</p>
+          <p class="text-xs text-charcoal/50">Cliente verificada</p>
+        </div>
+
+        <div class="snap-start shrink-0 w-full sm:w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)] bg-white rounded-2xl p-6 border border-charcoal/10">
+          <div class="text-gold mb-3">★★★★★</div>
+          <p class="text-sm text-charcoal/75 mb-4">"Pedí el corte más grueso de lo normal para un asado especial y lo prepararon exactamente como pedí. Un lujo."</p>
+          <p class="font-semibold text-sm">Diego R.</p>
+          <p class="text-xs text-charcoal/50">Cliente verificado</p>
+        </div>
+
+        <div class="snap-start shrink-0 w-full sm:w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)] bg-white rounded-2xl p-6 border border-charcoal/10">
+          <div class="text-gold mb-3">★★★★★</div>
+          <p class="text-sm text-charcoal/75 mb-4">"El lote semanal me ha cambiado la vida. Llega todo perfectamente organizado y siempre fresco."</p>
+          <p class="font-semibold text-sm">Laura P.</p>
+          <p class="text-xs text-charcoal/50">Cliente verificada</p>
+        </div>
+
+        <div class="snap-start shrink-0 w-full sm:w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)] bg-white rounded-2xl p-6 border border-charcoal/10">
+          <div class="text-gold mb-3">★★★★★</div>
+          <p class="text-sm text-charcoal/75 mb-4">"Se nota el mimo artesanal en cada pieza. El envío llegó puntual y con hielo suficiente."</p>
+          <p class="font-semibold text-sm">Andrés M.</p>
+          <p class="text-xs text-charcoal/50">Cliente verificado</p>
+        </div>
+
+      </div>
+
+      <div class="flex justify-center gap-3 mt-6">
+        <button onclick="scrollTestimonials(-1)" aria-label="Anterior" class="w-10 h-10 rounded-full border border-charcoal/20 flex items-center justify-center hover:bg-charcoal hover:text-bone transition-colors">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+        </button>
+        <button onclick="scrollTestimonials(1)" aria-label="Siguiente" class="w-10 h-10 rounded-full border border-charcoal/20 flex items-center justify-center hover:bg-charcoal hover:text-bone transition-colors">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 10. STORYTELLING ============ -->
+<section id="historia" class="max-w-7xl mx-auto px-5 md:px-8 py-20 grid md:grid-cols-2 gap-12 items-center">
+  <div class="reveal order-2 md:order-1">
+    <span class="font-mono text-xs tracking-widest text-gold-dim uppercase">Desde 1978</span>
+    <h2 class="font-display text-3xl md:text-4xl font-semibold mt-2 mb-6">Tres generaciones cortando con las manos</h2>
+    <p class="text-charcoal/70 leading-relaxed mb-4">
+      Todo empezó con mi abuelo y un mostrador de barrio. Hoy seguimos trabajando con las mismas ganaderías locales de siempre, porque sabemos de dónde viene cada pieza y cómo se ha criado.
+    </p>
+    <p class="text-charcoal/70 leading-relaxed mb-8">
+      No usamos máquinas para cortar: cada bandeja pasa por las manos de nuestro maestro carnicero antes de salir del obrador. Es más lento, pero es la única forma que conocemos de hacerlo bien.
+    </p>
+    <a href="#lotes" class="inline-flex items-center gap-2 text-burgundy font-semibold hover:gap-3 transition-all">
+      Descubre nuestros lotes
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+    </a>
+  </div>
+  <div class="reveal order-1 md:order-2 relative">
+    <img src="https://images.unsplash.com/photo-1595855709940-6cad02061e3a?q=80&w=900&auto=format&fit=crop" alt="Maestro carnicero trabajando en el obrador" class="rounded-2xl w-full h-[420px] object-cover" onerror="this.parentElement.classList.add('bg-wood'); this.remove()" />
+    <span class="seal absolute -bottom-6 -left-6 bg-bone shadow-lg hidden sm:inline-flex">DESDE<br/>1978</span>
+  </div>
+</section>
+
+<!-- ============ 11. NEWSLETTER / LEAD MAGNET ============ -->
+<section class="bg-burgundy relative overflow-hidden">
+  <div class="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_20%_20%,white,transparent_35%)]"></div>
+  <div class="relative max-w-3xl mx-auto px-5 md:px-8 py-20 text-center reveal">
+    <h2 class="font-display text-3xl md:text-4xl font-semibold text-bone mb-3">Llévate un 10% de descuento</h2>
+    <p class="text-bone/80 mb-8">Suscríbete y recibe tu código de bienvenida más nuestra guía gratuita "Cómo cocinar cada corte a la perfección".</p>
+    <form id="newsletter-form" class="flex flex-col sm:flex-row gap-3 max-w-md mx-auto" onsubmit="handleNewsletter(event)">
+      <label for="newsletter-email" class="sr-only">Correo electrónico</label>
+      <input id="newsletter-email" type="email" required placeholder="tu@email.com" class="flex-1 rounded-full px-5 py-3.5 text-charcoal placeholder:text-charcoal/40 border-none" />
+      <button type="submit" class="bg-gold text-charcoal font-semibold px-6 py-3.5 rounded-full hover:bg-bone transition-colors">Quiero mi 10%</button>
+    </form>
+    <p id="newsletter-msg" class="text-bone/70 text-sm mt-4 hidden">¡Gracias! Revisa tu correo para confirmar tu suscripción.</p>
+  </div>
+</section>
+
+<!-- ============ 12. FOOTER ============ -->
+<footer class="bg-charcoal text-bone/80">
+  <div class="max-w-7xl mx-auto px-5 md:px-8 py-16 grid sm:grid-cols-2 lg:grid-cols-4 gap-10">
+
+    <div>
+      <div class="flex items-center gap-2 mb-4">
+        <span class="text-xl">🔪</span>
+        <span class="font-display text-lg font-semibold text-bone">El Obrador</span>
+      </div>
+      <p class="text-sm leading-relaxed">Artesanos de la carne desde 1978. Comprometidos con la trazabilidad, la ganadería local y el respeto por el producto.</p>
+    </div>
+
+    <div>
+      <h3 class="font-display font-semibold text-bone mb-4 text-sm uppercase tracking-wide">Categorías</h3>
+      <ul class="space-y-2 text-sm">
+        <li><a href="#catalogo" class="hover:text-gold transition-colors">Vacuno</a></li>
+        <li><a href="#catalogo" class="hover:text-gold transition-colors">Cerdo</a></li>
+        <li><a href="#catalogo" class="hover:text-gold transition-colors">Aves de corral</a></li>
+        <li><a href="#catalogo" class="hover:text-gold transition-colors">Embutidos</a></li>
+        <li><a href="#lotes" class="hover:text-gold transition-colors">Lotes y packs</a></li>
+      </ul>
+    </div>
+
+    <div>
+      <h3 class="font-display font-semibold text-bone mb-4 text-sm uppercase tracking-wide">Envíos y Frío</h3>
+      <ul class="space-y-2 text-sm">
+        <li>❄️ Cadena de frío 2–8°C garantizada</li>
+        <li>🚚 Envío gratis desde 50€</li>
+        <li>📦 Entrega en 24–48h</li>
+        <li>🔁 Devoluciones si llega roto el frío</li>
+      </ul>
+    </div>
+
+    <div>
+      <h3 class="font-display font-semibold text-bone mb-4 text-sm uppercase tracking-wide">Contacto</h3>
+      <ul class="space-y-2 text-sm">
+        <li>📍 Av. de la Tradición 452, Ciudad Central</li>
+        <li>📞 +54 11 4567 8900</li>
+        <li>
+          <a href="https://wa.me/5491122334455" target="_blank" rel="noopener" class="inline-flex items-center gap-1.5 hover:text-gold transition-colors">
+            💬 WhatsApp: +54 9 11 2233 4455
+          </a>
+        </li>
+        <li>✉️ pedidos@elobrador.com</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="border-t border-bone/10">
+    <div class="max-w-7xl mx-auto px-5 md:px-8 py-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-bone/50">
+      <p>© 2026 El Obrador. Todos los derechos reservados.</p>
+      <div class="flex gap-5">
+        <a href="#" class="hover:text-gold transition-colors">Aviso Legal</a>
+        <a href="#" class="hover:text-gold transition-colors">Política de Privacidad</a>
+        <a href="#" class="hover:text-gold transition-colors">Envíos y Devoluciones</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- Botón flotante WhatsApp -->
+<a href="https://wa.me/5491122334455" target="_blank" rel="noopener" aria-label="Contactar por WhatsApp"
+   class="fixed bottom-6 right-6 z-40 bg-[#25D366] text-white w-14 h-14 rounded-full flex items-center justify-center shadow-xl hover:scale-110 transition-transform">
+  <svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.29-1.39a9.87 9.87 0 004.75 1.21h.01c5.46 0 9.9-4.45 9.9-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0012.04 2zm5.8 14.15c-.24.68-1.4 1.3-1.94 1.38-.5.08-1.12.11-1.81-.11-.42-.13-.95-.31-1.64-.6-2.88-1.24-4.76-4.14-4.9-4.33-.14-.19-1.18-1.57-1.18-3 0-1.42.75-2.12 1.02-2.41.26-.28.58-.35.77-.35h.55c.18 0 .42-.07.65.5.24.58.81 2 .88 2.15.07.15.12.32.02.51-.09.19-.14.31-.28.48-.14.16-.29.36-.41.49-.14.14-.28.29-.12.57.16.28.71 1.17 1.53 1.9 1.05.94 1.94 1.23 2.22 1.37.28.14.44.12.6-.07.16-.19.68-.79.87-1.06.18-.28.36-.23.6-.14.25.09 1.6.75 1.87.89.28.14.46.21.53.32.07.12.07.68-.17 1.35z"/></svg>
+</a>
+
+<script>
+  // ---------- State ----------
+  let cart = [];
+
+  // ---------- Reveal on scroll ----------
+  const revealEls = document.querySelectorAll('.reveal');
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('in'); });
+  }, { threshold: 0.12 });
+  revealEls.forEach(el => io.observe(el));
+
+  // ---------- Mobile menu ----------
+  function toggleMobileMenu() {
+    document.getElementById('mobile-menu').classList.toggle('hidden');
+  }
+
+  // ---------- Search bar ----------
+  function toggleSearch() {
+    document.getElementById('search-bar').classList.toggle('hidden');
+  }
+
+  // ---------- Cart drawer ----------
+  function toggleCart() {
+    document.getElementById('cart-overlay').classList.toggle('hidden');
+    document.getElementById('cart-drawer').classList.toggle('hidden');
+  }
+
+  function renderCart() {
+    const container = document.getElementById('cart-items');
+    const totalEl = document.getElementById('cart-total');
+    const countEl = document.getElementById('cart-count');
+
+    if (cart.length === 0) {
+      container.innerHTML = '<p>Tu carrito está vacío. Añade algún corte o lote para empezar.</p>';
+      totalEl.textContent = '0,00 €';
+      countEl.textContent = '0';
+      return;
+    }
+
+    container.innerHTML = cart.map((item, i) => `
+      <div class="flex items-start justify-between gap-3 border-b border-charcoal/10 pb-3">
+        <div>
+          <p class="font-semibold text-charcoal">${item.name}</p>
+          <p class="text-xs text-charcoal/50">${item.detail || ''}</p>
+        </div>
+        <div class="text-right shrink-0">
+          <p class="price-tag font-semibold text-burgundy">${item.price.toFixed(2).replace('.', ',')} €</p>
+          <button onclick="removeFromCart(${i})" class="text-xs text-charcoal/40 hover:text-burgundy underline">Quitar</button>
+        </div>
+      </div>
+    `).join('');
+
+    const total = cart.reduce((sum, i) => sum + i.price, 0);
+    totalEl.textContent = total.toFixed(2).replace('.', ',') + ' €';
+    countEl.textContent = cart.length;
+  }
+
+  function addToCart(name, price, detail) {
+    cart.push({ name, price, detail });
+    renderCart();
+    pulseCartIcon();
+  }
+
+  function addToCartFromCard(btn, name, basePrice) {
+    const card = btn.closest('.bg-white');
+    const weight = card.querySelector('.product-weight')?.value || '500';
+    const cut = card.querySelector('.product-cut')?.value || '';
+    const kg = parseInt(weight, 10) / 1000;
+    const price = Math.round(basePrice * kg * 100) / 100;
+    addToCart(name, price, `${weight}g · Corte ${cut}`);
+  }
+
+  function removeFromCart(index) {
+    cart.splice(index, 1);
+    renderCart();
+  }
+
+  function pulseCartIcon() {
+    const countEl = document.getElementById('cart-count');
+    countEl.classList.add('scale-125');
+    setTimeout(() => countEl.classList.remove('scale-125'), 200);
+  }
+
+  // ---------- Occasion filter (scrolls to catalog, simple UX feedback) ----------
+  function filterOccasion(tag) {
+    document.getElementById('catalogo').scrollIntoView({ behavior: 'smooth' });
+  }
+
+  // ---------- Testimonial carousel ----------
+  function scrollTestimonials(dir) {
+    const track = document.getElementById('testimonial-track');
+    const cardWidth = track.querySelector('div').offsetWidth + 24;
+    track.scrollBy({ left: dir * cardWidth, behavior: 'smooth' });
+  }
+
+  // ---------- Newsletter ----------
+  function handleNewsletter(e) {
+    e.preventDefault();
+    document.getElementById('newsletter-msg').classList.remove('hidden');
+    document.getElementById('newsletter-form').reset();
+  }
+
+  renderCart();
+</script>
+
+</body>
+</html>
